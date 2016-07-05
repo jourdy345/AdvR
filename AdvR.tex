@@ -1,0 +1,150 @@
+\documentclass[10pt]{article}
+\usepackage{kotex}
+\usepackage[margin=0.8in]{geometry} % set the margins to 1in on all sides
+\usepackage{graphicx} % to include figures
+\usepackage{amsmath} % great math stuff
+\usepackage{amsfonts} % for blackboard bold, etc
+\usepackage{amsthm} % better theorem environments
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{courier}
+\usepackage[usenames, dvipsnames]{color}
+\usepackage{titlesec}
+\usepackage{empheq}
+\usepackage{tikz}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tikz}
+\usepackage[english]{babel}
+\usepackage{appendix}
+\usepackage{listings}
+\usepackage{courier}
+\lstset{
+         basicstyle=\footnotesize\ttfamily, % Standardschrift
+         %numbers=left,               % Ort der Zeilennummern
+         numberstyle=\tiny,          % Stil der Zeilennummern
+         %stepnumber=2,               % Abstand zwischen den Zeilennummern
+         numbersep=5pt,              % Abstand der Nummern zum Text
+         tabsize=2,                  % Groesse von Tabs
+         extendedchars=true,         %
+         breaklines=true,            % Zeilen werden Umgebrochen
+         keywordstyle=\color{red},
+            frame=b,         
+ %        keywordstyle=[1]\textbf,    % Stil der Keywords
+ %        keywordstyle=[2]\textbf,    %
+ %        keywordstyle=[3]\textbf,    %
+ %        keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+         stringstyle=\color{white}\ttfamily, % Farbe der String
+         showspaces=false,           % Leerzeichen anzeigen ?
+         showtabs=false,             % Tabs anzeigen ?
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+         %backgroundcolor=\color{lightgray},
+         showstringspaces=false      % Leerzeichen in Strings anzeigen ?        
+ }
+ \lstloadlanguages{% Check Dokumentation for further languages ...
+         %[Visual]Basic
+         %Pascal
+         %C
+         %C++
+         %XML
+         %HTML
+         % Java
+         Python
+ }
+
+
+
+\linespread{1.5}
+
+\newcommand\tikzmark[1]{%
+  \tikz[remember picture,overlay]\node[inner sep=2pt] (#1) {};}
+\newcommand\DrawBox[3][]{%
+  \tikz[remember picture,overlay]\draw[#1] ([xshift=-3.5em,yshift=7pt]#2.north west) rectangle (#3.south east);}
+
+\algnewcommand\algorithmicinput{\textbf{Input:}}
+\algnewcommand\INPUT{\item[\algorithmicinput]}
+\newcommand\encircle[1]{%
+  \tikz[baseline=(X.base)] 
+    \node (X) [draw, shape=circle, inner sep=0] {\strut #1};}
+ 
+% Command "alignedbox{}{}" for a box within an align environment
+% Source: http://www.latex-community.org/forum/viewtopic.php?f=46&t=8144
+\newlength\dlf  % Define a new measure, dlf
+\newcommand\alignedbox[2]{
+% Argument #1 = before & if there were no box (lhs)
+% Argument #2 = after & if there were no box (rhs)
+&  % Alignment sign of the line
+{
+\settowidth\dlf{$\displaystyle #1$}  
+    % The width of \dlf is the width of the lhs, with a displaystyle font
+\addtolength\dlf{\fboxsep+\fboxrule}  
+    % Add to it the distance to the box, and the width of the line of the box
+\hspace{-\dlf}  
+    % Move everything dlf units to the left, so that & #1 #2 is aligned under #1 & #2
+\boxed{#1 #2}
+    % Put a box around lhs and rhs
+}
+}
+
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{conj}[thm]{Conjecture}
+
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\definecolor{myblue}{RGB}{72, 165, 226}
+\definecolor{myorange}{RGB}{222, 141, 8}
+
+\setlength{\heavyrulewidth}{1.5pt}
+\setlength{\abovetopsep}{4pt}
+
+
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\argmin}{\arg\!\min}
+\DeclareMathOperator{\Tr}{Tr}
+
+\newcommand{\bd}[1]{\mathbf{#1}} % for bolding symbols
+\newcommand{\RR}{\mathbb{R}} % for Real numbers
+\newcommand{\ZZ}{\mathbb{Z}} % for Integers
+\newcommand{\col}[1]{\left[\begin{matrix} #1 \end{matrix} \right]}
+\newcommand{\comb}[2]{\binom{#1^2 + #2^2}{#1+#2}}
+\newcommand{\bs}{\boldsymbol}
+\newcommand{\opn}{\operatorname}
+\begin{document}
+\nocite{*}
+
+\title{고급 \textsf{R}}
+\author{임대영 \\ 고려대학교 통계학과}
+\maketitle
+\pagebreak
+\tableofcontents
+\pagebreak
+\section{환경(Environments)}
+  `환경'은 스코핑을 가능하게 해주는 데이터 구조입니다. 이번 섹션에서는 환경의 구조를 심도 있게 다루어 `스코핑' 섹션에 설명되어 있는 4가지 스코핑 규칙을 이해할 수 있도록 \textsf{R}에서 환경이 무엇인지 깊이 들어가보도록 하겠습니다. \par
+  환경(Environment)은 자신만의 참조 방식이 있기 때문에 그 자체로도 의미있고 유용한 데이터 구조입니다. 한 환경 내부의 바인딩(binding)을 바꾸어도 환경은 복사되지 않고 그 자리에서 변경됩니다. 참고 방식(reference semantics)은 그다지 필요하지 않을 수 있지만 아주 유용한 경우가 있습니다.\par
+  다음의 질문에 답할 수 있는 사람은 이번 섹션에서 설명할 중요한 개념/내용을 이미 알고 있는 것입니다. 그러므로 이번 장을 건너뛰어도 좋습니다.
+  \begin{itemize}
+    \item 환경이 리스트와 다른 점을 적어도 세 가지 나열하시오.
+    \item 글로벌 환경의 부모 환경은 무엇인가? 부모를 가지지 않는 유일한 환경은 무엇인가?
+    \item 
+  \end{itemize}
+\end{document}
+
+
+
+
